@@ -22,6 +22,9 @@
     <strong>Pass-through Alarmo:</strong> Se il codice non è tra quelli custom, viene passato direttamente ad Alarmo per le normali operazioni di inserimento/disinserimento.
   </li>
 </ul>
+<strong>
+  Questo blueprint permette di non avere codici visibili all'interno dell'automazione o di Home Assistant utilizzando i codici già inseriti inseriti in Alarmo rendendo il nostro sistema di domotica più sicuro!
+</strong>
 
 <h2>✨ Funzionalità Principali</h2>
 <ul>
