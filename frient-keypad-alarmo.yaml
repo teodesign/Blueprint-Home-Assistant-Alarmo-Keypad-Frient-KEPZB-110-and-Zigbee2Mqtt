@@ -1,7 +1,7 @@
 blueprint:
   name: "Blueprint Home Assistant Alarmo and Keypad Frient KEPZB-110 with Zigbee2Mqtt"
   description: "A home assistant blueprint to use a keypad Frient KEPZB-110 in Home Assistant with Alarmo addon and Zigbee2Mqtt"
-  source_url: https://raw.githubusercontent.com/teodesign/Blueprint-Home-Assistant-Alarmo-Keypad-Frient-KEPZB-110-and-Zigbee2Mqtt/refs/heads/main/frient-keypad-alarmo.yaml
+  source_url: https://raw.githubusercontent.com/teodesign/Blueprint-Home-Assistant-Alarmo-Keypad-Frient-KEPZB-110-and-Zigbee2Mqtt/main/frient-keypad-alarmo.yaml
   domain: automation
   input:
     mqtt_topic:
