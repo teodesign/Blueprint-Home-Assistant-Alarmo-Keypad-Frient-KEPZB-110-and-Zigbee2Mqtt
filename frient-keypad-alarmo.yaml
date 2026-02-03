@@ -1,5 +1,5 @@
 blueprint:
-  name: "Blueprint Home Assistant Alarmo - Keypad Frient KEPZB-110 with Zigbee2Mqtt"
+  name: "Blueprint Home Assistant Alarmo and Keypad Frient KEPZB-110 with Zigbee2Mqtt"
   description: "A home assistant blueprint to use a keypad Frient KEPZB-110 in Home Assistant with Alarmo addon and Zigbee2Mqtt"
   domain: automation
   input:
