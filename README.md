@@ -14,19 +14,19 @@ La particolarità di questa automazione è la gestione a "due livelli":
 
 ✨ Funzionalità Principali:
 
-  💡 Dual-Layer Security: Gestione prioritaria di 2 Codici Custom per automazioni extra.
+    💡 Dual-Layer Security: Gestione prioritaria di 2 Codici Custom per automazioni extra.
 
-  🆘 Pulsante SOS: Azione dedicata e configurabile per la pressione del tasto di emergenza.
+    🆘 Pulsante SOS: Azione dedicata e configurabile per la pressione del tasto di emergenza.
 
-  🚨 Feedback Tastiera Completo: Invia comandi MQTT alla tastiera per aggiornare lo stato dei LED e dei suoni in base allo stato di Alarmo (Ritardo ingresso/uscita, Armato, Disarmato, Allarme attivato).
+    🚨 Feedback Tastiera Completo: Invia comandi MQTT alla tastiera per aggiornare lo stato dei LED e dei suoni in base allo stato di Alarmo (Ritardo ingresso/uscita, Armato, Disarmato, Allarme attivato).
 
-  ⚠️ Sistema di Notifiche Avanzato: * Notifiche per Inserimento e Disinserimento (opzionali).
+    ⚠️ Sistema di Notifiche Avanzato: * Notifiche per Inserimento e Disinserimento (opzionali).
   
-  ❌ Notifica di Errore Codice con alta priorità.
+    ❌ Notifica di Errore Codice con alta priorità.
 
-📲 Titoli, messaggi e livelli di priorità personalizzabili per ogni evento.
+    📲 Titoli, messaggi e livelli di priorità personalizzabili per ogni evento.
 
-Feedback Errore Visivo: In caso di codice errato, la tastiera emette un segnale acustico/visivo di errore (3 lampeggi/suoni).
+    Feedback Errore Visivo: In caso di codice errato, la tastiera emette un segnale acustico/visivo di errore (3 lampeggi/suoni).
 
 🛠 Requisiti
 Alarmo: L'integrazione Alarmo deve essere installata e configurata.
