@@ -2,9 +2,8 @@
 A home assistant blueprint to use a keypad Frient KEPZB-110 in Home Assistant with Alarmo addon and Zigbee2Mqtt
 
 
-
-
 📋 Descrizione del Blueprint
+
 Questo Blueprint permette di integrare la tastiera KEPZB-110 (via Zigbee2MQTT) con l'integrazione Alarmo in Home Assistant.
 
 La particolarità di questa automazione è la gestione a "due livelli":
