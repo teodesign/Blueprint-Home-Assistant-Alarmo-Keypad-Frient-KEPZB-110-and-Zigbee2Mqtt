@@ -8,9 +8,9 @@ Questo Blueprint permette di integrare la tastiera KEPZB-110 (via Zigbee2MQTT) c
 
 La particolarità di questa automazione è la gestione a "due livelli":
 
-Azioni Custom: Controlla se il codice inserito corrisponde a uno dei due PIN speciali definiti dall'utente per attivare azioni personalizzate (es. aprire un cancello, accendere luci).
+1) Azioni Custom: Controlla se il codice inserito corrisponde a uno dei due PIN speciali definiti dall'utente per attivare azioni personalizzate (es. aprire un cancello, accendere luci).
 
-Pass-through Alarmo: Se il codice non è tra quelli custom, viene passato direttamente ad Alarmo per le normali operazioni di inserimento/disinserimento.
+2) Pass-through Alarmo: Se il codice non è tra quelli custom, viene passato direttamente ad Alarmo per le normali operazioni di inserimento/disinserimento.
 
 ✨ Funzionalità Principali:
 
