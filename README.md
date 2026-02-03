@@ -49,4 +49,5 @@
 <ol>
   <li>Assicurati di avere il file <code>.yaml</code> nella cartella <code>blueprints/automation/</code> della tua istanza.</li>
   <li>Crea una nuova automazione basata su questo blueprint.</li>
-  <li>Inserisci il <strong>Topic MQTT</strong> della tua tastiera (es. <code>zigbee2mqtt/tastiera
+  <li>Inserisci il <strong>Topic MQTT</strong> della tua tastiera (es. <code>zigbee2mqtt/tastiera</code>).</li>
+</ol>
