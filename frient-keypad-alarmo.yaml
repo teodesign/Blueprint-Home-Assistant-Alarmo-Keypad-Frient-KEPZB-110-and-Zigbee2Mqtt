@@ -1,0 +1,230 @@
+blueprint:
+  name: "Blueprint Home Assistant Alarmo - Keypad Frient KEPZB-110 with Zigbee2Mqtt"
+  description: "A home assistant blueprint to use a keypad Frient KEPZB-110 in Home Assistant with Alarmo addon and Zigbee2Mqtt"
+  domain: automation
+  input:
+    mqtt_topic:
+      name: Topic MQTT Tastiera
+      description: Il topic base della tastiera (es. zigbee2mqtt/tastiera)
+    alarm_panel:
+      name: Pannello Alarmo
+      selector:
+        entity:
+          domain: alarm_control_panel
+
+    # --- CONFIGURAZIONE NOTIFICHE ---
+    notify_service:
+      name: Servizio di Notifica
+      description: Servizio da usare (es. notify.mobile_app_tuo_smartphone)
+      selector:
+        text: {}
+
+    enable_notify_arm:
+      name: "Attiva notifica: Inserimento"
+      default: false
+      selector:
+        boolean: {}
+    title_arm:
+      name: "Titolo: Inserimento"
+      default: "Allarme Inserito"
+    message_arm:
+      name: "Messaggio: Inserimento"
+      default: "Il sistema è ora attivo."
+    priority_arm:
+      name: "Alta priorità per Inserimento"
+      default: false
+      selector:
+        boolean: {}
+
+    enable_notify_disarm:
+      name: "Attiva notifica: Disinserimento"
+      default: false
+      selector:
+        boolean: {}
+    title_disarm:
+      name: "Titolo: Disinserimento"
+      default: "Allarme Disinserito"
+    message_disarm:
+      name: "Messaggio: Disinserimento"
+      default: "Il sistema è stato disattivato."
+    priority_disarm:
+      name: "Alta priorità per Disinserimento"
+      default: false
+      selector:
+        boolean: {}
+
+    enable_notify_error:
+      name: "Attiva notifica: Errore Codice"
+      default: false
+      selector:
+        boolean: {}
+    title_error:
+      name: "Titolo: Errore"
+      default: "Allarme: Errore Codice"
+    message_error:
+      name: "Messaggio: Errore"
+      default: "Inserito codice errato sulla tastiera!"
+    priority_error:
+      name: "Alta priorità per Errore"
+      default: true
+      selector:
+        boolean: {}
+
+    # --- AZIONI CUSTOM ---
+    custom_code_1:
+      name: Codice Speciale 1
+      default: "0000"
+    target_action_1:
+      name: Azione per Codice 1
+      selector:
+        action: {}
+    custom_code_2:
+      name: Codice Speciale 2
+      default: "1111"
+    target_action_2:
+      name: Azione per Codice 2
+      selector:
+        action: {}
+    sos_action:
+      name: Azione Pulsante SOS
+      selector:
+        action: {}
+
+mode: restart
+
+trigger:
+  - trigger: mqtt
+    topic: !input mqtt_topic
+    id: "keypad_input"
+  - trigger: state
+    entity_id: !input alarm_panel
+    id: "alarm_state_change"
+
+action:
+  - variables:
+      base_topic: !input mqtt_topic
+      topic_set: "{{ base_topic }}/set"
+      target_alarm: !input alarm_panel
+      notify_chan: !input notify_service
+
+  - choose:
+      # --- CASO 1: INPUT DALLA TASTIERA ---
+      - conditions:
+          - condition: trigger
+            id: "keypad_input"
+        sequence:
+          - variables:
+              payload: "{{ trigger.payload_json }}"
+              codice: "{{ payload.action_code | string }}"
+              azione: "{{ payload.action }}"
+              transazione: "{{ payload.action_transaction }}"
+              val_custom_1: !input custom_code_1
+              val_custom_2: !input custom_code_2
+
+          - choose:
+              # A. SOS
+              - conditions: "{{ azione == 'emergency' }}"
+                sequence: !input sos_action
+
+              # B. CODICE CUSTOM 1
+              - conditions: "{{ codice | string == (val_custom_1 | string) }}"
+                sequence: !input target_action_1
+
+              # C. CODICE CUSTOM 2
+              - conditions: "{{ codice | string == (val_custom_2 | string) }}"
+                sequence: !input target_action_2
+
+              # D. COMANDI STANDARD ALARMO
+              - conditions: "{{ azione in ['arm_all_zones', 'arm_day_zones', 'disarm'] }}"
+                sequence:
+                  - action: >-
+                      {% if azione == 'arm_all_zones' %} alarm_control_panel.alarm_arm_away
+                      {% elif azione == 'arm_day_zones' %} alarm_control_panel.alarm_arm_home
+                      {% else %} alarm_control_panel.alarm_disarm {% endif %}
+                    target:
+                      entity_id: !input alarm_panel
+                    data:
+                      code: "{{ codice }}"
+
+                  - delay: { milliseconds: 600 }
+
+                  - if:
+                      - condition: template
+                        value_template: >
+                          {% set s = states(target_alarm) %}
+                          {{ (azione == 'disarm' and s != 'disarmed') or (azione != 'disarm' and s == 'disarmed') }}
+                    then:
+                      # NOTIFICA ERRORE
+                      - if:
+                          - condition: template
+                            value_template: !input enable_notify_error
+                        then:
+                          - action: "{{ notify_chan }}"
+                            data:
+                              title: !input title_error
+                              message: !input message_error
+                              data:
+                                priority: "{{ 'high' if (priority_error | default(false)) else 'normal' }}"
+                                ttl: 0
+                      # FEEDBACK TASTIERA ERRORE
+                      - repeat:
+                          count: 3
+                          sequence:
+                            - action: mqtt.publish
+                              data:
+                                topic: "{{ topic_set }}"
+                                payload: '{"arm_mode": {"transaction": {{ transazione }}, "mode": "invalid_code"}}'
+                            - action: mqtt.publish
+                              data:
+                                topic: "{{ topic_set }}"
+                                payload: '{"warning": {"mode": "emergency", "level": "very_high", "strobe": false, "duration": 1}}'
+                            - delay: { milliseconds: 500 }
+
+      # --- CASO 2: FEEDBACK STATO ALARMO & NOTIFICHE ---
+      - conditions:
+          - condition: trigger
+            id: "alarm_state_change"
+        sequence:
+          - choose:
+              # NOTIFICA ARMATO
+              - conditions:
+                  - condition: template
+                    value_template: "{{ trigger.to_state.state in ['armed_away', 'armed_home'] and trigger.from_state.state != trigger.to_state.state }}"
+                  - condition: template
+                    value_template: !input enable_notify_arm
+                sequence:
+                  - action: "{{ notify_chan }}"
+                    data:
+                      title: !input title_arm
+                      message: !input message_arm
+                      data:
+                        priority: "{{ 'high' if (priority_arm | default(false)) else 'normal' }}"
+                        ttl: 0
+
+              # NOTIFICA DISARMATO
+              - conditions:
+                  - condition: template
+                    value_template: "{{ trigger.to_state.state == 'disarmed' and trigger.from_state.state != 'disarmed' }}"
+                  - condition: template
+                    value_template: !input enable_notify_disarm
+                sequence:
+                  - action: "{{ notify_chan }}"
+                    data:
+                      title: !input title_disarm
+                      message: !input message_disarm
+                      data:
+                        priority: "{{ 'high' if (priority_disarm | default(false)) else 'normal' }}"
+                        ttl: 0
+
+          # FEEDBACK TASTIERA (LED)
+          - action: mqtt.publish
+            data:
+              topic: "{{ topic_set }}"
+              payload: >-
+                {% set stato = states(target_alarm) %}
+                {% if stato == 'pending' %} {"arm_mode": {"mode": "entry_delay"}}
+                {% elif stato == 'arming' %} {"arm_mode": {"mode": "exit_delay"}}
+                {% elif stato == 'disarmed' %} {"arm_mode": {"mode": "disarm"}}
+                {% elif stato in ['armed_away', 'armed_home', 'armed_night'] %} {"arm_mode": {"mode": "arm_all_zones"}}
+                {% elif stato == 'triggered' %} {"warning": {"mode": "burglar", "duration": 180, "strobe": true}}
+                {% endif %}
