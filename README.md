@@ -14,6 +14,7 @@ Azioni Custom: Controlla se il codice inserito corrisponde a uno dei due PIN spe
 Pass-through Alarmo: Se il codice non è tra quelli custom, viene passato direttamente ad Alarmo per le normali operazioni di inserimento/disinserimento.
 
 ✨ Funzionalità Principali:
+
 💡 Dual-Layer Security: Gestione prioritaria di 2 Codici Custom per automazioni extra.
 
 🆘 Pulsante SOS: Azione dedicata e configurabile per la pressione del tasto di emergenza.
