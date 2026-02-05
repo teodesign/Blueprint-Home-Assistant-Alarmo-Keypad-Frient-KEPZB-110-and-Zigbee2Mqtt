@@ -64,12 +64,9 @@
 <div align="center">
 <h1>Blueprint Home Assistant: Alarmo + Frient KEPZB-110 Keypad</h1>
 <p><strong>Advanced integration via Zigbee2Mqtt for intelligent security management.</strong></p>
-​<a href="https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/teodesign/Blueprint-Home-Assistant-Alarmo-Keypad-Frient-KEPZB-110-and-Zigbee2Mqtt/main/frient-keypad-alarmo.yaml">
-<img src="upload://seon4JUbAq1rQha8zTVY8Sil7xF.svg" alt="Import to Home Assistant">
+<a href="https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/teodesign/Blueprint-Home-Assistant-Alarmo-Keypad-Frient-KEPZB-110-and-Zigbee2Mqtt/main/frient-keypad-alarmo.yaml">
+<img src="https://my.home-assistant.io/badges/blueprint_import.svg" alt="Importa in Home Assistant" />
 </a>
-<br /><br />
-For more information, you can see the<a href="https://github.com/teodesign/Blueprint-Home-Assistant-Alarmo-Keypad-Frient-KEPZB-110-and-Zigbee2Mqtt/tree/main" target="_blank">
-GitHub Repository</a>
 </div>
 ​<hr />
 ​<h2>📋 Blueprint Description</h2>
